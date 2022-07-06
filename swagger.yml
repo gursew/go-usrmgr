@@ -1,0 +1,361 @@
+swagger: "2.0"
+
+info:
+  description: User management rest api
+  title: An user manager application
+  version: 1.0.0
+schemes:
+  - http
+
+consumes:
+  - application/json
+
+produces:
+  - application/json
+
+basePath: "/v1"
+
+paths:
+  /users:
+    post:
+      operationId: createUser
+      summary: add user information in data store
+      description: "create an user through api"
+      tags: ["users"]
+      parameters:
+        - name: body
+          required: true
+          in: body
+          schema:
+            $ref: "#/definitions/user"
+      responses:
+        201:
+          description: "user created"
+          headers:
+            X-User-ID:
+                type: string
+                description: "id of newly created user"
+        400:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        401:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        403:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+    get:
+      operationId: listUsers
+      summary: list of users
+      description: "users list"
+      tags: ["users"]
+      responses:
+        200:
+          description: "successfully grt list of users"
+          schema:
+            type: array
+            items:
+              $ref: "#/definitions/user_view"
+        400:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        401:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        403:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+  /users/{id}:
+    parameters:
+      - type: string
+        name: id
+        in: path
+        required: true
+    get:
+      operationId: viewUser
+      summary: retrieve an user
+      description: "view an user"
+      tags: ["users"]
+      responses:
+        200:
+          description: "successfully view user"
+          schema:
+            $ref: "#/definitions/user_view"
+        400:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        401:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        403:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        404:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+    delete:
+      operationId: deleteUser
+      summary: delete an user
+      description: "delete an user by given id in url"
+      tags: ["users"]
+      responses:
+        204:
+          description: "successfully deleted"
+        400:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        401:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        403:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        404:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+
+    patch:
+      operationId: updateUser
+      summary: update an user
+      description: "update an user by given id in url"
+      tags: ["users"]
+      parameters:
+        - name: body
+          in: body
+          schema:
+            $ref: "#/definitions/user_partial"
+      responses:
+        204:
+          description: "successfully updated"
+        400:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        401:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        403:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        404:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        422:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+        default:
+          description: error
+          schema:
+            $ref: "#/definitions/error"
+
+definitions:
+  user:
+    type: object
+    title: "user"
+    description: "an user object"
+    properties:
+      name:
+        title: "name"
+        description: "name of user"
+        type: string
+        minLength: 3
+        example: "Username"
+      role:
+        title: "role"
+        description: "role of user"
+        type: string
+        enum:
+          - admin
+          - operator
+        example: "admin"
+      address:
+        title: "address"
+        description: "address of user"
+        type: string
+        example: "address 1"
+      device_id:
+        title: "device_id"
+        description: "device id of user"
+        type: integer
+        example: 23244
+      phone:
+        title: "phone"
+        description: "phone number of user"
+        type: string
+        minLength: 10
+        maxLength: 13
+        example: "+919873323432"
+      tags:
+        title: "tags"
+        description: "tags of user"
+        type: array
+        items:
+          type: string
+        example: ["tag1","tag2"]
+
+  user_view:
+    type: object
+    title: "user view"
+    description: "an user object"
+    properties:
+      id:
+        title: "id"
+        description: "id of user"
+        type: string
+        readOnly: true
+        example: "uuid"
+      name:
+        title: "name"
+        description: "name of user"
+        type: string
+        readOnly: true
+        example: "Username"
+      role:
+        title: "role"
+        description: "role of user"
+        type: string
+        readOnly: true
+        enum:
+          - admin
+          - operator
+        example: "admin"
+      address:
+        title: "address"
+        description: "address of user"
+        type: string
+        readOnly: true
+        example: "address 1"
+      device_id:
+        title: "device_id"
+        description: "device id of user"
+        type: integer
+        readOnly: true
+        example: 23244
+      phone:
+        title: "phone"
+        description: "phone number of user"
+        type: string
+        readOnly: true
+        example: "+919873323432"
+      status:
+        title: "status"
+        description: "status of user"
+        type: string
+        enum: [ "NEW","ACTIVE" ]
+        readOnly: true
+        example: "ACTIVE"
+      tags:
+        title: "tags"
+        description: "tags of user"
+        readOnly: true
+        type: array
+        items:
+          type: string
+        example: [ "tag1","tag2" ]
+      audit:
+        $ref: "#/definitions/audit"
+
+  user_partial:
+    type: object
+    title: "user partial"
+    description: "an user partial object"
+    properties:
+      device_id:
+        title: "device_id"
+        description: "device id of user"
+        type: integer
+        example: 23244
+      phone:
+        title: "phone"
+        description: "phone number of user"
+        type: string
+        minLength: 10
+        maxLength: 13
+        example: "+919873323432"
+      tags:
+        title: "tags"
+        description: "tags of user"
+        type: array
+        items:
+          type: string
+        example: [ "tag1","tag2" ]
+
+  audit:
+    type: object
+    title: "audit"
+    description: "audit detail"
+    properties:
+      created_at:
+        title: "createdAt"
+        description: "timestamp of record created at"
+        readOnly: true
+        type: string
+        format: date-time
+        example: "2018-03-20T09:12:28Z"
+      created_by:
+        title: "createdBy"
+        description: "name of user who created"
+        type: string
+        readOnly: true
+        example: "gurpreet"
+      updated_at:
+        title: "updatedAt"
+        description: "timestamp of record updated at"
+        readOnly: true
+        type: string
+        format: date-time
+        example: "2018-03-20T09:12:28Z"
+      updated_by:
+        title: "updatedBy"
+        description: "name of user who updated"
+        type: string
+        readOnly: true
+        example: "sewak"
+
+  error:
+    type: object
+    required:
+      - message
+    properties:
+      code:
+        type: integer
+      message:
+        type: string
+
